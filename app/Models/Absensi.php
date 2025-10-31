@@ -14,4 +14,9 @@ class Absensi extends Model
     ];
 
     protected $table = 'absensis';
+
+     public function mahasiswa()
+    {
+        return $this->belongsTo(Mahasiswa::class, 'mahasiswa_id');
+    }
 }
