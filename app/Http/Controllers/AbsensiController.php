@@ -4,32 +4,36 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Mahasiswa;
+use App\Models\Matakuliah;
 use App\Models\Absensi;
+use Carbon\Carbon;
 
 class AbsensiController extends Controller
 {
     public function index()
     {
-        $mahasiswas = Mahasiswa::with('absensi')->get();
-        return view('absensi', compact('mahasiswas'));
+        $mahasiswas = Mahasiswa::all();
+        $matakuliahs = Matakuliah::all();
+        return view('absensi', compact('mahasiswas', 'matakuliahs'));
     }
 
     public function store(Request $request)
     {
-        $statuses = $request->input('status', []);
+        $request->validate([
+            'tanggal_absensi' => 'required|date',
+            'matakuliah_id' => 'required|exists:matakuliahs,id',
+            'status' => 'required|array',
+        ]);
 
-        if (empty($statuses)) {
-            return redirect()->back()->with('success', 'Tidak ada data absensi yang dipilih.');
-        }
-
-        foreach ($statuses as $mahasiswa_id => $status_absen) {
+        foreach ($request->status as $mahasiswa_id => $status_absen) {
             Absensi::create([
                 'mahasiswa_id' => $mahasiswa_id,
+                'matakuliah_id' => $request->matakuliah_id,
+                'tanggal_absensi' => $request->tanggal_absensi,
                 'status_absen' => $status_absen,
-                'tanggal' => now(),
             ]);
         }
 
-        return redirect()->route('absensi.index')->with('success', 'Absensi berhasil disimpan!');
+        return redirect()->back()->with('success', 'Absensi berhasil disimpan!');
     }
 }

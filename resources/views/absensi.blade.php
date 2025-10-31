@@ -28,6 +28,34 @@
     <form action="{{ route('absensi.store') }}" method="POST">
       @csrf
 
+      {{-- Bagian Pilihan Mata Kuliah dan Tanggal --}}
+      <div class="flex flex-col md:flex-row gap-4 mb-6">
+        <div class="flex-1">
+          <label for="tanggal_absensi" class="block text-sm font-semibold text-gray-700 mb-1">Tanggal Absensi</label>
+          <input type="date" name="tanggal_absensi" id="tanggal_absensi" 
+                 value="{{ date('Y-m-d') }}" 
+                 class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+        </div>
+
+        <div class="flex-1">
+          <label for="matakuliah_id" class="block text-sm font-semibold text-gray-700 mb-1">Mata Kuliah</label>
+          <select name="matakuliah_id" id="matakuliah_id" 
+                  class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            <option value="">-- Pilih Mata Kuliah --</option>
+            @foreach($matakuliahs as $mk)
+              <option value="{{ $mk->id }}">{{ $mk->nama_matakuliah }}</option>
+            @endforeach
+          </select>
+        </div>
+
+        <div class="flex items-end">
+          <button type="submit" 
+                  class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg shadow transition">
+            💾 Simpan Absensi
+          </button>
+        </div>
+      </div>
+
       {{-- Tabel Absensi --}}
       <div class="overflow-x-auto mb-6">
         <table class="min-w-full bg-white border border-gray-300 rounded-lg shadow-md">
@@ -97,14 +125,6 @@
             @endforeach
           </tbody>
         </table>
-      </div>
-
-      {{-- Tombol Simpan --}}
-      <div class="flex justify-end">
-        <button type="submit" 
-                class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg shadow transition">
-          💾 Simpan Absensi
-        </button>
       </div>
     </form>
   </div>
