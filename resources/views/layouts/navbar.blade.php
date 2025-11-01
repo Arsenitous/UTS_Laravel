@@ -9,7 +9,7 @@
          class="hover:text-cyan-300 transition">Mahasiswa</a>
       <a href="{{ route('matakuliah.index') }}" 
          class="hover:text-cyan-300 transition">Matakuliah</a>
-      <a href="{{ route('absensi.index') }}" 
+      <a href="{{ route('absensi.create') }}" 
          class="hover:text-cyan-300 transition">Absensi</a>
     </div>
   </div>

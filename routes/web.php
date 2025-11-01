@@ -25,9 +25,6 @@ Route::get('/matakuliah/{matakuliah}/edit', [MatakuliahController::class, 'edit'
 Route::put('/matakuliah/{matakuliah}', [MatakuliahController::class, 'update'])->name('matakuliah.update');
 Route::delete('/matakuliah/{matakuliah}', [MatakuliahController::class, 'destroy'])->name('matakuliah.destroy');
 
-
-Route::get('/absensi', [AbsensiController::class, 'index'])->name('absensi.index');
-
-Route::get('/absensi', [AbsensiController::class, 'index'])->name('absensi.index');
+Route::get('/absensi', [AbsensiController::class, 'create'])->name('absensi.create');
 Route::post('/absensi', [AbsensiController::class, 'store'])->name('absensi.store');
 

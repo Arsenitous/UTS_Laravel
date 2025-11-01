@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,126 +7,93 @@
   @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="bg-gray-100 text-gray-800">
-  {{-- Navbar --}}
+<body class="bg-gray-50 text-gray-800">
   @include('layouts.navbar')
 
-  {{-- Container --}}
-  <div class="container mx-auto py-10 px-6">
-    <div class="flex justify-between items-center mb-6">
-      <h1 class="text-3xl font-bold text-gray-800">📅 Data Absensi Mahasiswa</h1>
+  <div class="max-w-6xl mx-auto py-10 px-6">
+    {{-- Notifikasi Sukses --}}
+@if (session('success'))
+  <div class="mb-6">
+    <div class="bg-green-100 border border-green-300 text-green-800 px-4 py-3 rounded-xl shadow-sm flex items-center justify-between">
+      <span>✅ {{ session('success') }}</span>
+      <button onclick="this.parentElement.remove()" class="text-green-600 hover:text-green-800 font-bold">✖</button>
     </div>
-
-    {{-- Notifikasi sukses --}}
-    @if(session('success'))
-      <div class="mb-4 p-3 bg-green-100 border border-green-300 text-green-700 rounded-lg">
-        {{ session('success') }}
-      </div>
-    @endif
-
-    {{-- Form utama untuk menyimpan semua absensi --}}
-    <form action="{{ route('absensi.store') }}" method="POST">
-      @csrf
-
-      {{-- Bagian Pilihan Mata Kuliah dan Tanggal --}}
-      <div class="flex flex-col md:flex-row gap-4 mb-6">
-        <div class="flex-1">
-          <label for="tanggal_absensi" class="block text-sm font-semibold text-gray-700 mb-1">Tanggal Absensi</label>
-          <input type="date" name="tanggal_absensi" id="tanggal_absensi" 
-                 value="{{ date('Y-m-d') }}" 
-                 class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-        </div>
-
-        <div class="flex-1">
-          <label for="matakuliah_id" class="block text-sm font-semibold text-gray-700 mb-1">Mata Kuliah</label>
-          <select name="matakuliah_id" id="matakuliah_id" 
-                  class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-            <option value="">-- Pilih Mata Kuliah --</option>
-            @foreach($matakuliahs as $mk)
-              <option value="{{ $mk->id }}">{{ $mk->nama_matakuliah }}</option>
-            @endforeach
-          </select>
-        </div>
-
-        <div class="flex items-end">
-          <button type="submit" 
-                  class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg shadow transition">
-            💾 Simpan Absensi
-          </button>
-        </div>
+  </div>
+@endif
+    {{-- Judul --}}
+    <div class="bg-white shadow-md rounded-2xl p-6 border border-gray-200 mb-8">
+      <div class="flex items-center gap-3 mb-3">
+        <span class="text-3xl">📝</span>
+        <h1 class="text-3xl font-semibold text-gray-800">Absensi Mahasiswa</h1>
       </div>
 
-      {{-- Tabel Absensi --}}
-      <div class="overflow-x-auto mb-6">
-        <table class="min-w-full bg-white border border-gray-300 rounded-lg shadow-md">
-          <thead class="bg-gray-800 text-white">
-            <tr>
-              <th class="py-3 px-4 text-left">No</th>
-              <th class="py-3 px-4 text-left">Mahasiswa</th>
-              <th class="py-3 px-4 text-left">Kehadiran Terakhir</th>
-              <th class="py-3 px-4 text-center">Status Hari Ini</th>
-            </tr>
-          </thead>
+      {{-- Form Input --}}
+      <form action="{{ route('absensi.store') }}" method="POST">
+        @csrf
 
-          <tbody>
-            @foreach ($mahasiswas as $index => $mahasiswa)
-              @php
-                $absensiTerakhir = $mahasiswa->absensi->last();
-              @endphp
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-4">
+          {{-- Tanggal Absensi --}}
+          <div>
+            <label class="block font-medium text-gray-700 mb-2">Tanggal Absensi</label>
+            <input type="date" name="tanggal_absensi"
+                   class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                   required>
+          </div>
 
-              <tr class="border-t hover:bg-gray-50 transition">
-                <td class="py-2 px-4">{{ $index + 1 }}</td>
+          {{-- Pilih Mata Kuliah --}}
+          <div>
+            <label class="block font-medium text-gray-700 mb-2">Pilih Mata Kuliah</label>
+            <select name="matakuliah_id"
+                    class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                    required>
+              <option value="">-- Pilih Mata Kuliah --</option>
+              @foreach ($matakuliahs as $mk)
+                <option value="{{ $mk->id }}">{{ $mk->nama_matakuliah }}</option>
+              @endforeach
+            </select>
+          </div>
+        </div>
 
-                {{-- Nama + NIM --}}
-                <td class="py-2 px-4">
-                  <div class="font-semibold text-gray-800">{{ strtoupper($mahasiswa->name) }}</div>
-                  <div class="text-sm text-gray-500">{{ $mahasiswa->NIM }}</div>
-                </td>
-
-                {{-- Kehadiran terakhir --}}
-                <td class="py-2 px-4">
-                  @if($absensiTerakhir)
-                    @switch($absensiTerakhir->status_absen)
-                      @case('H')
-                        <span class="bg-green-100 text-green-700 text-sm px-3 py-1 rounded-full">Hadir</span>
-                        @break
-                      @case('A')
-                        <span class="bg-red-100 text-red-700 text-sm px-3 py-1 rounded-full">Absen</span>
-                        @break
-                      @case('I')
-                        <span class="bg-yellow-100 text-yellow-700 text-sm px-3 py-1 rounded-full">Izin</span>
-                        @break
-                      @case('S')
-                        <span class="bg-blue-100 text-blue-700 text-sm px-3 py-1 rounded-full">Sakit</span>
-                        @break
-                      @default
-                        <span class="text-gray-400 text-sm">-</span>
-                    @endswitch
-                  @else
-                    <span class="text-gray-400 text-sm">-</span>
-                  @endif
-                </td>
-
-                {{-- Input status baru --}}
-                <td class="py-2 px-4 text-center space-x-2">
+        {{-- Tabel Mahasiswa --}}
+        <div class="bg-white shadow-md rounded-2xl border border-gray-200 mt-8">
+          <table class="w-full text-center border-collapse">
+            <thead class="bg-blue-600 text-white">
+              <tr>
+                <th class="py-3 px-4 rounded-tl-2xl w-12">#</th>
+                <th class="py-3 px-4 text-left">Nama Mahasiswa</th>
+                <th class="py-3 px-4 rounded-tr-2xl">Status</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+              @foreach ($mahasiswas as $index => $mhs)
+              <tr class="hover:bg-gray-50 transition">
+                <td class="py-3 px-4 font-medium text-gray-700">{{ $index + 1 }}</td>
+                <td class="py-3 px-4 text-left">{{ $mhs->name }}</td>
+                <td class="py-3 px-4">
                   <div class="flex justify-center gap-4">
-                    @foreach(['H','A','I','S'] as $status)
-                      <label class="inline-flex items-center space-x-1">
-                        <input type="radio" 
-                               name="status[{{ $mahasiswa->id }}]" 
-                               value="{{ $status }}"
-                               class="text-blue-500 focus:ring-blue-400">
-                        <span class="text-sm text-gray-700">{{ $status }}</span>
+                    @foreach (['H', 'A', 'I', 'S'] as $status)
+                      <label class="flex items-center gap-1">
+                        <input type="radio" name="status[{{ $mhs->id }}]" value="{{ $status }}" required>
+                        <span>{{ $status }}</span>
                       </label>
                     @endforeach
                   </div>
                 </td>
               </tr>
-            @endforeach
-          </tbody>
-        </table>
-      </div>
-    </form>
+              @endforeach
+            </tbody>
+          </table>
+        </div>
+
+        {{-- Tombol Simpan --}}
+        <div class="flex justify-center mt-8">
+          <button type="submit"
+                  class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl shadow-md transition-all duration-200">
+            💾 Simpan Absensi
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
 </body>
 </html>
