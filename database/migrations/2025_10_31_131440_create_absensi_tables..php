@@ -11,19 +11,15 @@ return new class extends Migration
         Schema::create('absensis', function (Blueprint $table) {
             $table->id();
 
-            // Relasi ke tabel mahasiswa
             $table->foreignId('mahasiswa_id')
                   ->constrained('mahasiswas')
                   ->onDelete('cascade');
 
-            // Relasi ke tabel matakuliah (optional)
-            $table->char('matakuliah_id', 36)->nullable(); // ← tambahkan nullable()
-            $table->foreign('matakuliah_id')
-                  ->references('id')
-                  ->on('matakuliahs')
+            $table->foreignId('matakuliah_id')
+                  ->constrained('matakuliahs')
                   ->onDelete('cascade');
 
-            $table->date('tanggal_absensi')->default(now());
+            $table->date('tanggal_absensi')->nullable();
             $table->enum('status_absen', ['A', 'H', 'I', 'S'])->default('A');
             $table->timestamps();
         });

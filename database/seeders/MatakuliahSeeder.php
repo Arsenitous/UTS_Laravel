@@ -4,14 +4,10 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 use Carbon\Carbon;
 
 class MatakuliahSeeder extends Seeder
 {
-    /**
-     * Jalankan seeder untuk tabel matakuliahs.
-     */
     public function run(): void
     {
         $data = [
@@ -27,7 +23,6 @@ class MatakuliahSeeder extends Seeder
 
         foreach ($data as $item) {
             DB::table('matakuliahs')->insert([
-                'id' => (string) Str::uuid(),
                 'kode' => $item['kode'],
                 'nama_matakuliah' => $item['nama_matakuliah'],
                 'created_at' => Carbon::now(),

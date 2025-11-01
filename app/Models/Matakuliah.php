@@ -12,4 +12,5 @@ class Matakuliah extends Model
     ];
 
     protected $table = 'matakuliahs';
+
 }

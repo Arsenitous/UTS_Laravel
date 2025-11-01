@@ -7,33 +7,19 @@ use Illuminate\Http\Request;
 
 class MahasiswaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        // Ambil semua data mahasiswa
         $mahasiswas = Mahasiswa::all();
-
-        // Tampilkan ke view indexMahasiswa
         return view('indexMahasiswa', compact('mahasiswas'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        // Tampilkan form createMahasiswa
         return view('createMahasiswa');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        // Validasi data
         $request->validate([
             'name' => 'required|string|max:100',
             'NIM' => 'required|string|max:20|unique:mahasiswas',
@@ -43,7 +29,6 @@ class MahasiswaController extends Controller
             'angkatan' => 'required|string|max:10',
         ]);
 
-        // Simpan data baru
         Mahasiswa::create([
             'name' => $request->name,
             'NIM' => $request->NIM,
@@ -53,24 +38,16 @@ class MahasiswaController extends Controller
             'angkatan' => $request->angkatan,
         ]);
 
-        return redirect()->route('mahasiswa.index');
+        return redirect()->route('mahasiswa.index')
+                         ->with('success', 'Data mahasiswa berhasil ditambahkan!');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show($id)
     {
-        // Ambil data mahasiswa berdasarkan id
         $mahasiswa = Mahasiswa::findOrFail($id);
-
-        // Kirim data ke form (untuk update)
         return view('createMahasiswa', compact('mahasiswa'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, $id)
     {
         $mahasiswa = Mahasiswa::findOrFail($id);
@@ -93,17 +70,16 @@ class MahasiswaController extends Controller
             'angkatan' => $request->angkatan,
         ]);
 
-        return redirect()->route('mahasiswa.index');
+        return redirect()->route('mahasiswa.index')
+                         ->with('success', 'Data mahasiswa berhasil diperbarui!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy($id)
     {
         $mahasiswa = Mahasiswa::findOrFail($id);
         $mahasiswa->delete();
 
-        return redirect()->route('mahasiswa.index');
+        return redirect()->route('mahasiswa.index')
+                         ->with('success', 'Data mahasiswa berhasil dihapus!');
     }
 }
