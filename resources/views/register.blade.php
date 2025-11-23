@@ -3,22 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>
-    {{ isset($mahasiswa) ? 'Edit Mahasiswa' : 'Tambah Mahasiswa' }}
-  </title>
+  <title>Sign Up Mahasiswa</title>
   @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
 <body class="bg-gray-100 min-h-screen flex flex-col">
-
-  {{-- Navbar --}}
   @include('layouts.navbar')
 
-  {{-- Container --}}
   <main class="flex-1 flex items-center justify-center py-12">
     <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-2xl border border-gray-200">
       <h1 class="text-3xl font-bold text-center text-blue-700 mb-6">
-        {{ isset($mahasiswa) ? '✏️ Edit Mahasiswa' : '➕ Tambah Mahasiswa Baru' }}
+        ➕ Daftar Akun Mahasiswa
       </h1>
 
       {{-- Pesan Error --}}
@@ -33,51 +28,41 @@
         </div>
       @endif
 
-      <form method="POST" 
-            action="{{ isset($mahasiswa) ? route('mahasiswa.update', $mahasiswa->id) : route('mahasiswa.store') }}">
+      <form method="POST" action="{{ route('register.post') }}">
         @csrf
-        @if(isset($mahasiswa))
-          @method('PUT')
-        @endif
 
         {{-- Nama --}}
         <div class="mb-4">
           <label class="block font-medium mb-1">Nama</label>
-          <input type="text" name="name" 
-                 value="{{ old('name', $mahasiswa->name ?? '') }}"
+          <input type="text" name="name" value="{{ old('name') }}"
                  class="w-full border rounded-lg p-2 focus:ring focus:ring-blue-300 focus:outline-none">
         </div>
 
         {{-- NIM --}}
         <div class="mb-4">
           <label class="block font-medium mb-1">NIM</label>
-          <input type="text" name="NIM" 
-                 value="{{ old('NIM', $mahasiswa->NIM ?? '') }}"
+          <input type="text" name="NIM" value="{{ old('NIM') }}"
                  class="w-full border rounded-lg p-2 focus:ring focus:ring-blue-300 focus:outline-none">
         </div>
 
         {{-- Tempat Lahir --}}
         <div class="mb-4">
           <label class="block font-medium mb-1">Tempat Lahir</label>
-          <input type="text" name="tempat_lahir" 
-                 value="{{ old('tempat_lahir', $mahasiswa->tempat_lahir ?? '') }}"
+          <input type="text" name="tempat_lahir" value="{{ old('tempat_lahir') }}"
                  class="w-full border rounded-lg p-2 focus:ring focus:ring-blue-300 focus:outline-none">
         </div>
 
         {{-- Tanggal Lahir --}}
         <div class="mb-4">
           <label class="block font-medium mb-1">Tanggal Lahir</label>
-          <input type="date" name="tanggal_lahir" 
-                 value="{{ old('tanggal_lahir', $mahasiswa->tanggal_lahir ?? '') }}"
+          <input type="date" name="tanggal_lahir" value="{{ old('tanggal_lahir') }}"
                  class="w-full border rounded-lg p-2 focus:ring focus:ring-blue-300 focus:outline-none">
         </div>
 
         {{-- Jurusan --}}
         <div class="mb-4">
           <label class="block font-medium mb-1">Jurusan</label>
-          @php
-            $jurusan = old('jurusan', $mahasiswa->jurusan ?? '');
-          @endphp
+          @php $jurusan = old('jurusan'); @endphp
           <div class="space-y-2">
             <label class="flex items-center gap-2">
               <input type="radio" name="jurusan" value="Bisnis Digital"
@@ -100,33 +85,35 @@
         {{-- Angkatan --}}
         <div class="mb-4">
           <label class="block font-medium mb-1">Angkatan</label>
-          <input type="text" name="angkatan" 
-                 value="{{ old('angkatan', $mahasiswa->angkatan ?? '') }}"
+          <input type="text" name="angkatan" value="{{ old('angkatan') }}"
                  class="w-full border rounded-lg p-2 focus:ring focus:ring-blue-300 focus:outline-none">
         </div>
 
-        {{-- PASSWORD (TAMBAHAN BARU) --}}
-        <div class="mb-6">
-          <label class="block font-medium mb-1">
-            Password 
-            @if(isset($mahasiswa))
-              <span class="text-sm text-gray-500">(kosongkan jika tidak ingin mengubah)</span>
-            @endif
-          </label>
+        <hr class="my-6">
+
+        {{-- Password --}}
+        <div class="mb-4">
+          <label class="block font-medium mb-1">Password</label>
           <input type="password" name="password"
                  class="w-full border rounded-lg p-2 focus:ring focus:ring-blue-300 focus:outline-none">
         </div>
 
-        {{-- Tombol --}}
-        <div class="flex justify-between">
-          <a href="{{ route('mahasiswa.index') }}" 
+        {{-- Konfirmasi Password --}}
+        <div class="mb-6">
+          <label class="block font-medium mb-1">Konfirmasi Password</label>
+          <input type="password" name="password_confirmation"
+                 class="w-full border rounded-lg p-2 focus:ring focus:ring-blue-300 focus:outline-none">
+        </div>
+
+        <div class="flex justify-between items-center">
+          <a href="{{ route('login') }}"
              class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg shadow transition">
-            ← Kembali
+            ← Kembali ke Login
           </a>
 
           <button type="submit"
                   class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow transition">
-            {{ isset($mahasiswa) ? 'Update' : 'Create' }}
+            Daftar
           </button>
         </div>
       </form>

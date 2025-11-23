@@ -21,4 +21,10 @@ class Mahasiswa extends Model
     {
         return $this->hasMany(Absensi::class, 'mahasiswa_id');
     }
+
+    public function login()
+    {
+        return $this->hasOne(\App\Models\Login::class, 'mahasiswa_id');
+    }
+
 }

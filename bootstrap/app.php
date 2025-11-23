@@ -11,7 +11,12 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+
+        // ➕ Tambahkan alias middleware kamu di sini
+        $middleware->alias([
+            'auth.mahasiswa' => \App\Http\Middleware\AuthMahasiswa::class,
+        ]);
+
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
